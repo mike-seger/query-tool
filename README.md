@@ -11,9 +11,9 @@ This project provides the following features:
 2. **Dynamic SQL Query API**
     - The application exposes an API that allows the execution of SQL queries and returns the results in TSV format.
 
-3. **A sample DB***
-    - The application comes with a default DB based on the (https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project)[DVD rental
-      project].
+3. **A Sample DB**
+    - The application comes with a default DB based on the
+      (DVD rental project)[https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project].
 
 4. **H2 Database Console**
     - The H2 database is an in-memory database used for testing.
