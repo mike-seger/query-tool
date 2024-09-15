@@ -54,6 +54,11 @@ public class QueryService {
         return queries;
     }
 
+    private String escapeChars(String s) {
+        if(s==null) return s;
+        return s.replace("\t", "\\t").replace("\n", "\\n");
+    }
+
     private String executeQueryPrivate(String sql) throws SQLException {
         var columnNames = new ArrayList<String>();
         var rows = new ArrayList<String>();
@@ -61,13 +66,13 @@ public class QueryService {
         try {
             var rowSet = jdbcTemplate.queryForRowSet(sql);
             for (var i = 1; i <= rowSet.getMetaData().getColumnCount(); i++) {
-                columnNames.add(rowSet.getMetaData().getColumnName(i));
+                columnNames.add(escapeChars(rowSet.getMetaData().getColumnName(i)));
             }
 
             while (rowSet.next()) {
                 var row = new ArrayList<String>();
                 for (var columnName : columnNames) {
-                    row.add(rowSet.getString(columnName));
+                    row.add(escapeChars(rowSet.getString(columnName)));
                 }
                 rows.add(String.join("\t", row));
             }

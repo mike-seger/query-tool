@@ -28,6 +28,9 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
+.literal {
+    white-space: pre-wrap;
+}
 .listbox {
     margin-right: 10px;
 }

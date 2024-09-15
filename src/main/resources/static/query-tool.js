@@ -114,6 +114,10 @@ class QueryManager {
         table.innerHTML = `<tr><td><pre>${error}</pre></td></tr>`
     }
 
+    unescape(s) {
+        return s?.trim().replace(/\\t/g, "\t").replace(/\\n/g, "\n")
+    }
+
     displayResultsAsTable(tsvData) {
         const table = document.getElementById('results-table')
         table.innerHTML = ''
@@ -125,12 +129,12 @@ class QueryManager {
 
         const rows = tsvData.trim().split('\n')
         const headers = rows[0].split('\t')
-        const headerRow = '<tr>' + headers.map(header => `<th>${header}</th>`).join('') + '</tr>'
+        const headerRow = '<tr>' + headers.map(header => `<th class="literal">${this.unescape(header)}</th>`).join('') + '</tr>'
         table.innerHTML += headerRow
 
         for (let i = 1; i < rows.length; i++) {
             const rowData = rows[i].split('\t')
-            const row = '<tr>' + rowData.map(cell => `<td>${cell}</td>`).join('') + '</tr>'
+            const row = '<tr>' + rowData.map(cell => `<td class="literal">${this.unescape(cell)}</td>`).join('') + '</tr>'
             table.innerHTML += row
         }
     }
