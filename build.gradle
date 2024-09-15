@@ -1,8 +1,7 @@
 buildscript {
     ext {
-        //bootVersion = "2.7.18"
-        springBootVersion = "3.3.0"
-        //bootVersion = "3.3.3"
+        springBootVersion = "2.7.18"
+        //springBootVersion = "3.3.0"
     }
 }
 
@@ -12,7 +11,7 @@ plugins {
 }
 
 allprojects {
-    group = 'com.net128.lib'
+    group = 'com.net128.querytool'
     version = '0.0.1-SNAPSHOT'
 
     repositories {
@@ -21,7 +20,6 @@ allprojects {
 
     ext {
         springBootVersion = springBootVersion
-        //springVersion = "5.3.25"
     }
 }
 
@@ -33,7 +31,4 @@ subprojects {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
         }
     }
-
-    // Centralized dependency versions
-
 }
