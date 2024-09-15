@@ -13,7 +13,8 @@ This project provides the following features:
 
 3. **A Sample DB**
     - The application comes with a default DB based on the
-      (DVD rental project)[https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project].
+      [DVD rental
+project](https://github.com/gordonkwokkwok/DVD-Rental-PostgreSQL-Project).
 
 4. **H2 Database Console**
     - The H2 database is an in-memory database used for testing.
