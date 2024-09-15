@@ -1,4 +1,4 @@
-package com.net128.app.querytool;
+package com.net128.querytool;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

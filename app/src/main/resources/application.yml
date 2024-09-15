@@ -2,7 +2,7 @@ springdoc.swagger-ui.path: /swagger-ui.html
 
 spring:
   datasource:
-    url: jdbc:h2:mem:querytool;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:lib;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -20,7 +20,7 @@ management:
       exposure:
         include: "*"
 
-com.net128.app.querytool:
+com.net128.query-tool:
   custom-queries: true
   queries:
     postgres__table_counts: |

@@ -1,4 +1,4 @@
-package com.net128.app.querytool;
+package com.net128.querytool;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
-@ConfigurationProperties(prefix = "com.net128.app.querytool")
+@ConfigurationProperties(prefix = "com.net128.query-tool")
 @Data
 public class QueryToolConfiguration {
     private Map<String, String> queries = new LinkedHashMap<>();

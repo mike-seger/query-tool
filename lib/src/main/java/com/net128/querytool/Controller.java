@@ -1,4 +1,4 @@
-package com.net128.app.querytool;
+package com.net128.querytool;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/query-tool")
+@RequestMapping("lib/api/query-tool")
 public class Controller {
 
     private final QueryService queryService;
