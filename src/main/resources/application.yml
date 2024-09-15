@@ -21,13 +21,44 @@ management:
         include: "*"
 
 com.net128.app.querytool:
+  custom-queries: true
   queries:
     postgres__table_counts: |
-      SELECT relname as table_name, n_live_tup as row_count
-      FROM pg_stat_user_tables WHERE schemaname=(select current_schema)
-      ORDER BY row_count DESC, table_name;
+      select relname as table_name, n_live_tup as row_count
+      from pg_stat_user_tables where schemaname=(select current_schema)
+      order by row_count desc, table_name
     h2__table_counts: |
-      SELECT table_name, row_count_estimate row_count
-      FROM INFORMATION_SCHEMA.TABLES
-      WHERE table_type = 'BASE TABLE' AND TABLE_SCHEMA = 'PUBLIC'
-      ORDER BY row_count DESC, TABLE_NAME;
+      select table_name, row_count_estimate row_count
+      from information_schema.tables
+      where table_schema = 'PUBLIC'
+      order by row_count desc, table_name
+    postgres__table_sizes: |
+      select
+        table_name as name,
+        pg_relation_size(table_schema||'.'||table_name) as size,
+        pg_size_pretty(pg_relation_size(table_schema||'.'||table_name)) as size_pretty
+      from information_schema.tables
+      where table_schema=(select current_schema)
+      order by size desc
+    postgres__activity: |  
+      select *
+      from pg_stat_activity
+      where pg_stat_activity.query_start is not null
+      order by backend_start
+    postgres__locks: |
+      select *
+      from pg_locks
+      join pg_stat_activity on pg_locks.pid = pg_stat_activity.pid;
+      order by backend_start desc
+    top_100_rented: |
+      select description, rented from
+        (select film_id, rented from
+          (select * from (
+            select inventory_id, count(*) rented
+            from rental
+            group by inventory_id
+          ) res
+          order by rented desc
+          limit 100) res2
+        join inventory on res2.inventory_id = inventory.inventory_id) res3
+      join film on res3.film_id = film.film_id

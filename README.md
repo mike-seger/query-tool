@@ -5,8 +5,9 @@
 This project provides the following features:
 
 1. **Dynamic SQL Query UI**
-    - The UI allows querying the connected database with predefind queries, custom queries
-      and display the results 
+    - The UI allows querying the connected database with predefind queries, 
+      custom queries and display the results
+      ![query-tool](./doc/query-tool.png)
 
 2. **Dynamic SQL Query API**
     - The application exposes an API that allows the execution of SQL queries and returns the results in TSV format.

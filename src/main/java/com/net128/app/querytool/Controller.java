@@ -23,7 +23,7 @@ public class Controller {
     }
 
     @GetMapping("/queries")
-    public Map<String, String> getSqlByKey() {
+    public Map<String, String> getQueries() {
         return queryService.getQueries();
     }
 

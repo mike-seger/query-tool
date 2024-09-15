@@ -18,17 +18,43 @@ public class QueryService {
     private final DataSource dataSource;
     private final DbType dbType;
     private final String currentSchema;
+    private final LinkedHashMap<String, String> predefinedQueries;
+    private final LinkedHashMap<String, String> queries;
 
     public QueryService(JdbcTemplate jdbcTemplate,
-                        QueryToolConfiguration queryToolConfiguration, DataSource dataSource) {
+            QueryToolConfiguration queryToolConfiguration, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryToolConfiguration = queryToolConfiguration;
         this.dataSource = dataSource;
         this.dbType = DbType.fromString(getDatabaseType().toLowerCase());
         this.currentSchema = getCurrentSchema();
+        this.predefinedQueries = getPredefinedQueries();
+        this.queries = getQueries();
     }
 
     public String executeQuery(String sql) throws SQLException {
+        if(!queryToolConfiguration.isCustomQueries())
+            throw new SQLException(
+                "The current QueryToolConfiguration doesn't allow arbitrary queries");
+        return executeQueryPrivate(sql);
+    }
+
+    public String executeQueryByKey(String key) throws SQLException {
+        var sql = getQueries().get(key);
+        if (sql == null) throw new IllegalArgumentException("Invalid key: " + key);
+        return executeQueryPrivate(sql);
+    }
+
+    public LinkedHashMap<String, String> getQueries() {
+        if(queries!=null) return queries;
+        var queries = new LinkedHashMap<>(getPredefinedQueries());
+        if(queryToolConfiguration.isCustomQueries())
+            getTables(true).stream().sorted().forEach(name -> queries.put(
+                name.toLowerCase(), String.format("select * from %s limit 100", name)));
+        return queries;
+    }
+
+    private String executeQueryPrivate(String sql) throws SQLException {
         var columnNames = new ArrayList<String>();
         var rows = new ArrayList<String>();
 
@@ -56,7 +82,7 @@ public class QueryService {
         return header + "\n" + result;
     }
 
-    public String getDatabaseType() {
+    private String getDatabaseType() {
         try (var connection = dataSource.getConnection()) {
             var metaData = connection.getMetaData();
             return metaData.getDatabaseProductName();
@@ -77,7 +103,7 @@ public class QueryService {
         return null;
     }
 
-    public List<String> getTables(boolean onlyCurrentSchema) {
+    private List<String> getTables(boolean onlyCurrentSchema) {
         var tables = new ArrayList<String>();
         try (var connection = dataSource.getConnection()) {
             var metaData = connection.getMetaData();
@@ -94,27 +120,9 @@ public class QueryService {
         return tables;
     }
 
-    public String executeQueryByKey(String key) throws SQLException {
-        var sql = queryToolConfiguration.getQueries().get(key);
-        if (sql == null) throw new IllegalArgumentException("Invalid key: " + key);
-        return executeQuery(sql);
-    }
-
-    public Map<String, String> getQueries() {
+    private LinkedHashMap<String, String> getPredefinedQueries() {
+        if(predefinedQueries!=null) return predefinedQueries;
         var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
-        getTables(true).stream().sorted().forEach(name -> queries.put(
-            name.toLowerCase(), String.format("select * from %s limit 100", name)));
-        return getFilteredQueries(queries);
-    }
-
-    private boolean isDbSpecificQuery(String name) {
-        return (name.startsWith("h2__")&&dbType==DbType.h2) ||
-            (name.startsWith("postgres__")&&dbType==DbType.postgres) ||
-            (name.startsWith("oracle__")&&dbType==DbType.oracle) ||
-            (name.startsWith("mysql__")&&dbType==DbType.mysql);
-    }
-
-    private LinkedHashMap<String, String> getFilteredQueries(LinkedHashMap<String, String> queries) {
         var queryNames = new LinkedHashSet<>(queries.keySet());
         var filteredQueries = new LinkedHashMap<String, String>();
         queryNames.forEach(
@@ -127,7 +135,15 @@ public class QueryService {
                 } else filteredQueries.put(name, queries.get(name));
             }
         );
+
         return filteredQueries;
+    }
+
+    private boolean isDbSpecificQuery(String name) {
+        return (name.startsWith("h2__")&&dbType==DbType.h2) ||
+            (name.startsWith("postgres__")&&dbType==DbType.postgres) ||
+            (name.startsWith("oracle__")&&dbType==DbType.oracle) ||
+            (name.startsWith("mysql__")&&dbType==DbType.mysql);
     }
 
     private enum DbType {
