@@ -1,4 +1,4 @@
-package com.net128.querytool;
+package com.net128.oss.querytool;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

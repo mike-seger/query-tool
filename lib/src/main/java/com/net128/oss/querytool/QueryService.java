@@ -1,4 +1,4 @@
-package com.net128.querytool;
+package com.net128.oss.querytool;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;

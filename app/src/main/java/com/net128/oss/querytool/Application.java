@@ -1,4 +1,4 @@
-package com.net128.querytool;
+package com.net128.oss.querytool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
