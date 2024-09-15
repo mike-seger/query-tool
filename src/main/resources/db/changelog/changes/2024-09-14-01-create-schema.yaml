@@ -1,0 +1,1327 @@
+databaseChangeLog:
+- changeSet:
+    id: 1726349197863-1
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: customer_pkey
+            name: customer_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: store_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(256)
+        - column:
+            name: email
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: address_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueBoolean: true
+            name: activebool
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: CURRENT_DATE
+            name: create_date
+            type: date
+        - column:
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            name: active
+            type: INTEGER
+        tableName: customer
+- changeSet:
+    id: 1726349197863-2
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: customer_customer_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-3
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: actor_pkey
+            name: actor_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(256)
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: actor
+- changeSet:
+    id: 1726349197863-4
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: actor_actor_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-5
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: category_pkey
+            name: category_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: category
+- changeSet:
+    id: 1726349197863-6
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: category_category_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-7
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: film_film_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-8
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: film_actor_pkey
+            name: actor_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: film_actor_pkey
+            name: film_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: film_actor
+- changeSet:
+    id: 1726349197863-9
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: film_category_pkey
+            name: film_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: film_category_pkey
+            name: category_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: film_category
+- changeSet:
+    id: 1726349197863-10
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: address_pkey
+            name: address_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: address
+            type: TEXT
+        - column:
+            name: address2
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: district
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: city_id
+            type: INTEGER
+        - column:
+            name: postal_code
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: phone
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: address
+- changeSet:
+    id: 1726349197863-11
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: address_address_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-12
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: city_pkey
+            name: city_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: city
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: country_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: city
+- changeSet:
+    id: 1726349197863-13
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: city_city_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-14
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: country_pkey
+            name: country_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: country
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: country
+- changeSet:
+    id: 1726349197863-15
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: country_country_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-16
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: inventory_pkey
+            name: inventory_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: film_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: store_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: inventory
+- changeSet:
+    id: 1726349197863-17
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: inventory_inventory_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-18
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: language_pkey
+            name: language_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: CHAR(20)
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: language
+- changeSet:
+    id: 1726349197863-19
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: language_language_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-20
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+            name: payment_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: customer_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: staff_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: rental_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: amount
+            type: numeric(5, 2)
+        - column:
+            constraints:
+              nullable: false
+            name: payment_date
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: payment
+- changeSet:
+    id: 1726349197863-21
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: payment_payment_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-22
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: rental_pkey
+            name: rental_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: rental_date
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: inventory_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: customer_id
+            type: INTEGER
+        - column:
+            name: return_date
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: staff_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: rental
+- changeSet:
+    id: 1726349197863-23
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: rental_rental_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-24
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: staff_pkey
+            name: staff_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(256)
+        - column:
+            constraints:
+              nullable: false
+            name: address_id
+            type: INTEGER
+        - column:
+            name: email
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: store_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueBoolean: true
+            name: active
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: TEXT
+        - column:
+            name: password
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            name: picture
+            type: BYTEA
+        tableName: staff
+- changeSet:
+    id: 1726349197863-25
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: staff_staff_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-26
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: store_pkey
+            name: store_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: manager_staff_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: address_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        tableName: store
+- changeSet:
+    id: 1726349197863-27
+    author: querytool
+    changes:
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: store_store_id_seq
+        startValue: 1
+- changeSet:
+    id: 1726349197863-28
+    author: querytool
+    changes:
+    - createView:
+        fullDefinition: false
+        selectQuery: |-
+          SELECT cu.customer_id AS id,
+              ((cu.first_name || ' '::text) || cu.last_name) AS name,
+              a.address,
+              a.postal_code AS "zip code",
+              a.phone,
+              city.city,
+              country.country,
+                  CASE
+                      WHEN cu.activebool THEN 'active'::text
+                      ELSE ''::text
+                  END AS notes,
+              cu.store_id AS sid
+             FROM (((customer cu
+               JOIN address a ON ((cu.address_id = a.address_id)))
+               JOIN city ON ((a.city_id = city.city_id)))
+               JOIN country ON ((city.country_id = country.country_id)));
+        viewName: customer_list
+- changeSet:
+    id: 1726349197863-29
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: address_id
+        indexName: idx_fk_address_id
+        tableName: customer
+- changeSet:
+    id: 1726349197863-30
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: store_id
+        indexName: idx_fk_store_id
+        tableName: customer
+- changeSet:
+    id: 1726349197863-31
+#    dbms: "!h2"
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: last_name
+        indexName: idx_last_name
+        tableName: customer
+- changeSet:
+    id: 1726349197863-32
+#    dbms: "!h2"
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: last_name
+        indexName: idx_actor_last_name
+        tableName: actor
+- changeSet:
+    id: 1726349197863-33
+    author: querytool
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: film_pkey
+            name: film_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: title
+            type: VARCHAR(256)
+        - column:
+            name: description
+            type: TEXT
+        - column:
+            name: release_year
+#            type: YEAR(10)
+            type: VARCHAR(10)
+        - column:
+            constraints:
+              nullable: false
+            name: language_id
+            type: INTEGER
+        - column:
+            name: original_language_id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            defaultValueNumeric: 3
+            name: rental_duration
+            type: SMALLINT
+        - column:
+            constraints:
+              nullable: false
+            defaultValueNumeric: 4.99
+            name: rental_rate
+            type: numeric(4, 2)
+        - column:
+            name: length
+            type: SMALLINT
+        - column:
+            constraints:
+              nullable: false
+            defaultValueNumeric: 19.99
+            name: replacement_cost
+            type: numeric(5, 2)
+        - column:
+            defaultValue: G
+            name: rating
+            #type: MPAA_RATING
+            type: VARCHAR(10)
+        - column:
+            constraints:
+              nullable: false
+            defaultValueComputed: now()
+            name: last_update
+            type: TIMESTAMP WITH TIME ZONE
+        - column:
+            name: special_features
+#            type: TEXT[]
+            type: TEXT
+        - column:
+            constraints:
+              nullable: false
+            name: fulltext
+#            type: TSVECTOR
+            type: VARCHAR(256)
+        tableName: film
+#- changeSet:
+#    id: 1726349197863-34
+#    author: querytool
+#    changes:
+#    - createView:
+#        fullDefinition: false
+#        selectQuery: |-
+#          SELECT film.film_id AS fid,
+#              film.title,
+#              film.description,
+#              category.name AS category,
+#              film.rental_rate AS price,
+#              film.length,
+#              film.rating,
+#              group_concat(((actor.first_name || ' '::text) || actor.last_name)) AS actors
+#             FROM ((((category
+#               LEFT JOIN film_category ON ((category.category_id = film_category.category_id)))
+#               LEFT JOIN film ON ((film_category.film_id = film.film_id)))
+#               JOIN film_actor ON ((film.film_id = film_actor.film_id)))
+#               JOIN actor ON ((film_actor.actor_id = actor.actor_id)))
+#            GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating;
+#        viewName: film_list
+#- changeSet:
+#    id: 1726349197863-35
+#    author: querytool
+#    changes:
+#    - createView:
+#        fullDefinition: false
+#        selectQuery: |-
+#          SELECT film.film_id AS fid,
+#              film.title,
+#              film.description,
+#              category.name AS category,
+#              film.rental_rate AS price,
+#              film.length,
+#              film.rating,
+#              group_concat((((upper("substring"(actor.first_name, 1, 1)) || lower("substring"(actor.first_name, 2))) || upper("substring"(actor.last_name, 1, 1))) || lower("substring"(actor.last_name, 2)))) AS actors
+#             FROM ((((category
+#               LEFT JOIN film_category ON ((category.category_id = film_category.category_id)))
+#               LEFT JOIN film ON ((film_category.film_id = film.film_id)))
+#               JOIN film_actor ON ((film.film_id = film_actor.film_id)))
+#               JOIN actor ON ((film_actor.actor_id = actor.actor_id)))
+#            GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating;
+#        viewName: nicer_but_slower_film_list
+#- changeSet:
+#    id: 1726349197863-36
+#    author: querytool
+#    changes:
+#    - createView:
+#        fullDefinition: false
+#        selectQuery: |-
+#          SELECT a.actor_id,
+#              a.first_name,
+#              a.last_name,
+#              group_concat(DISTINCT ((c.name || ': '::text) || ( SELECT group_concat(f.title) AS group_concat
+#                     FROM ((film f
+#                       JOIN film_category fc_1 ON ((f.film_id = fc_1.film_id)))
+#                       JOIN film_actor fa_1 ON ((f.film_id = fa_1.film_id)))
+#                    WHERE ((fc_1.category_id = c.category_id) AND (fa_1.actor_id = a.actor_id))
+#                    GROUP BY fa_1.actor_id))) AS film_info
+#             FROM (((actor a
+#               LEFT JOIN film_actor fa ON ((a.actor_id = fa.actor_id)))
+#               LEFT JOIN film_category fc ON ((fa.film_id = fc.film_id)))
+#               LEFT JOIN category c ON ((fc.category_id = c.category_id)))
+#            GROUP BY a.actor_id, a.first_name, a.last_name;
+#        viewName: actor_info
+- changeSet:
+    id: 1726349197863-37
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: film_id
+        indexName: idx_fk_film_id
+        tableName: film_actor
+- changeSet:
+    id: 1726349197863-38
+    author: querytool
+    changes:
+    - createView:
+        fullDefinition: false
+        selectQuery: |-
+          SELECT c.name AS category,
+              sum(p.amount) AS total_sales
+             FROM (((((payment p
+               JOIN rental r ON ((p.rental_id = r.rental_id)))
+               JOIN inventory i ON ((r.inventory_id = i.inventory_id)))
+               JOIN film f ON ((i.film_id = f.film_id)))
+               JOIN film_category fc ON ((f.film_id = fc.film_id)))
+               JOIN category c ON ((fc.category_id = c.category_id)))
+            GROUP BY c.name
+            ORDER BY (sum(p.amount)) DESC;
+        viewName: sales_by_film_category
+- changeSet:
+    id: 1726349197863-39
+    author: querytool
+    changes:
+    - createView:
+        fullDefinition: false
+        selectQuery: |-
+          SELECT ((c.city || ','::text) || cy.country) AS store,
+              ((m.first_name || ' '::text) || m.last_name) AS manager,
+              sum(p.amount) AS total_sales
+             FROM (((((((payment p
+               JOIN rental r ON ((p.rental_id = r.rental_id)))
+               JOIN inventory i ON ((r.inventory_id = i.inventory_id)))
+               JOIN store s ON ((i.store_id = s.store_id)))
+               JOIN address a ON ((s.address_id = a.address_id)))
+               JOIN city c ON ((a.city_id = c.city_id)))
+               JOIN country cy ON ((c.country_id = cy.country_id)))
+               JOIN staff m ON ((s.manager_staff_id = m.staff_id)))
+            GROUP BY cy.country, c.city, s.store_id, m.first_name, m.last_name
+            ORDER BY cy.country, c.city;
+        viewName: sales_by_store
+- changeSet:
+    id: 1726349197863-40
+    author: querytool
+    changes:
+    - createView:
+        fullDefinition: false
+        selectQuery: |-
+          SELECT s.staff_id AS id,
+              ((s.first_name || ' '::text) || s.last_name) AS name,
+              a.address,
+              a.postal_code AS "zip code",
+              a.phone,
+              city.city,
+              country.country,
+              s.store_id AS sid
+             FROM (((staff s
+               JOIN address a ON ((s.address_id = a.address_id)))
+               JOIN city ON ((a.city_id = city.city_id)))
+               JOIN country ON ((city.country_id = country.country_id)));
+        viewName: staff_list
+- changeSet:
+    id: 1726349197863-41
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: city_id
+        indexName: idx_fk_city_id
+        tableName: address
+- changeSet:
+    id: 1726349197863-42
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: country_id
+        indexName: idx_fk_country_id
+        tableName: city
+- changeSet:
+    id: 1726349197863-43
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: store_id
+        - column:
+            name: film_id
+        indexName: idx_store_id_film_id
+        tableName: inventory
+- changeSet:
+    id: 1726349197863-51
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: inventory_id
+        indexName: idx_fk_inventory_id
+        tableName: rental
+- changeSet:
+    id: 1726349197863-52
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: rental_date
+        - column:
+            name: inventory_id
+        - column:
+            name: customer_id
+        indexName: idx_unq_rental_rental_date_inventory_id_customer_id
+        tableName: rental
+        unique: true
+- changeSet:
+    id: 1726349197863-53
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: manager_staff_id
+        indexName: idx_unq_manager_staff_id
+        tableName: store
+        unique: true
+- changeSet:
+    id: 1726349197863-54
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: fulltext
+        indexName: film_fulltext_idx
+        tableName: film
+- changeSet:
+    id: 1726349197863-55
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: language_id
+        indexName: idx_fk_language_id
+        tableName: film
+- changeSet:
+    id: 1726349197863-56
+    author: querytool
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: original_language_id
+        indexName: idx_fk_original_language_id
+        tableName: film
+- changeSet:
+    id: 1726349197863-77
+    author: querytool
+    changes:
+    - addPrimaryKey:
+        columnNames: payment_date, payment_id
+        constraintName: payment_pkey
+        tableName: payment
+- changeSet:
+    id: 1726349197863-78
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: city_id
+        baseTableName: address
+        constraintName: address_city_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: city_id
+        referencedTableName: city
+        validate: true
+- changeSet:
+    id: 1726349197863-79
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: country_id
+        baseTableName: city
+        constraintName: city_country_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: country_id
+        referencedTableName: country
+        validate: true
+- changeSet:
+    id: 1726349197863-80
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: address_id
+        baseTableName: customer
+        constraintName: customer_address_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: address_id
+        referencedTableName: address
+        validate: true
+- changeSet:
+    id: 1726349197863-81
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: store_id
+        baseTableName: customer
+        constraintName: customer_store_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: store_id
+        referencedTableName: store
+        validate: true
+- changeSet:
+    id: 1726349197863-82
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: actor_id
+        baseTableName: film_actor
+        constraintName: film_actor_actor_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: actor_id
+        referencedTableName: actor
+        validate: true
+- changeSet:
+    id: 1726349197863-83
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: film_id
+        baseTableName: film_actor
+        constraintName: film_actor_film_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: film_id
+        referencedTableName: film
+        validate: true
+- changeSet:
+    id: 1726349197863-84
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: category_id
+        baseTableName: film_category
+        constraintName: film_category_category_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: category_id
+        referencedTableName: category
+        validate: true
+- changeSet:
+    id: 1726349197863-85
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: film_id
+        baseTableName: film_category
+        constraintName: film_category_film_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: film_id
+        referencedTableName: film
+        validate: true
+- changeSet:
+    id: 1726349197863-86
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: language_id
+        baseTableName: film
+        constraintName: film_language_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: language_id
+        referencedTableName: language
+        validate: true
+- changeSet:
+    id: 1726349197863-87
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: original_language_id
+        baseTableName: film
+        constraintName: film_original_language_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: language_id
+        referencedTableName: language
+        validate: true
+- changeSet:
+    id: 1726349197863-88
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: film_id
+        baseTableName: inventory
+        constraintName: inventory_film_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: film_id
+        referencedTableName: film
+        validate: true
+- changeSet:
+    id: 1726349197863-89
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: store_id
+        baseTableName: inventory
+        constraintName: inventory_store_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: store_id
+        referencedTableName: store
+        validate: true
+- changeSet:
+    id: 1726349197863-108
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: customer_id
+        baseTableName: rental
+        constraintName: rental_customer_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: customer_id
+        referencedTableName: customer
+        validate: true
+- changeSet:
+    id: 1726349197863-109
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: inventory_id
+        baseTableName: rental
+        constraintName: rental_inventory_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: inventory_id
+        referencedTableName: inventory
+        validate: true
+- changeSet:
+    id: 1726349197863-110
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: staff_id
+        baseTableName: rental
+        constraintName: rental_staff_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: staff_id
+        referencedTableName: staff
+        validate: true
+- changeSet:
+    id: 1726349197863-111
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: address_id
+        baseTableName: staff
+        constraintName: staff_address_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: address_id
+        referencedTableName: address
+        validate: true
+- changeSet:
+    id: 1726349197863-112
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: store_id
+        baseTableName: staff
+        constraintName: staff_store_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: store_id
+        referencedTableName: store
+        validate: true
+- changeSet:
+    id: 1726349197863-113
+    author: querytool
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: address_id
+        baseTableName: store
+        constraintName: store_address_id_fkey
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: CASCADE
+        referencedColumnNames: address_id
+        referencedTableName: address
+        validate: true

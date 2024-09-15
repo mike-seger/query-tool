@@ -1,0 +1,33 @@
+springdoc.swagger-ui.path: /swagger-ui.html
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:querytool;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    platform: h2
+  h2:
+    console:
+      enabled: true
+
+liquibase:
+  change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+com.net128.app.querytool:
+  queries:
+    postgres__table_statistics: |
+      SELECT relname as table_name, n_live_tup as row_count
+      FROM pg_stat_user_tables WHERE schemaname=(select current_schema)
+      ORDER BY row_count DESC, table_name;
+    h2__table_statistics: |
+      SELECT table_name, row_count_estimate row_count
+      FROM INFORMATION_SCHEMA.TABLES
+      WHERE table_type = 'BASE TABLE' AND TABLE_SCHEMA = 'PUBLIC'
+      ORDER BY row_count DESC, TABLE_NAME;

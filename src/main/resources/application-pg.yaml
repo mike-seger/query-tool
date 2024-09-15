@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:25432/test
+    driver-class-name: org.postgresql.Driver
+    username: querytool
+    password: S3cret
+    platform: postgres

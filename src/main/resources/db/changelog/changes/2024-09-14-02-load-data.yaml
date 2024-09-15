@@ -1,0 +1,560 @@
+databaseChangeLog:
+
+- changeSet:
+    id: 1726349917593-1
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: country_id
+            name: country_id
+            type: NUMERIC
+        - column:
+            header: country
+            name: country
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/country.csv
+        quotchar: '"'
+        separator: ','
+        tableName: country
+
+- changeSet:
+    id: 1726349917593-2
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: language_id
+            name: language_id
+            type: NUMERIC
+        - column:
+            header: name
+            name: name
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/language.csv
+        quotchar: '"'
+        separator: ','
+        tableName: language
+
+- changeSet:
+    id: 1726349917593-3
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: category_id
+            name: category_id
+            type: NUMERIC
+        - column:
+            header: name
+            name: name
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/category.csv
+        quotchar: '"'
+        separator: ','
+        tableName: category
+
+- changeSet:
+    id: 1726349917593-4
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: actor_id
+            name: actor_id
+            type: NUMERIC
+        - column:
+            header: first_name
+            name: first_name
+            type: STRING
+        - column:
+            header: last_name
+            name: last_name
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/actor.csv
+        quotchar: '"'
+        separator: ','
+        tableName: actor
+
+- changeSet:
+    id: 1726349917593-5
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: city_id
+            name: city_id
+            type: NUMERIC
+        - column:
+            header: city
+            name: city
+            type: STRING
+        - column:
+            header: country_id
+            name: country_id
+            type: NUMERIC
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/city.csv
+        quotchar: '"'
+        separator: ','
+        tableName: city
+
+- changeSet:
+    id: 1726349917593-6
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: address_id
+            name: address_id
+            type: NUMERIC
+        - column:
+            header: address
+            name: address
+            type: STRING
+        - column:
+            header: address2
+            name: address2
+            type: STRING
+        - column:
+            header: district
+            name: district
+            type: STRING
+        - column:
+            header: city_id
+            name: city_id
+            type: NUMERIC
+        - column:
+            header: postal_code
+            name: postal_code
+            type: STRING
+        - column:
+            header: phone
+            name: phone
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/address.csv
+        quotchar: '"'
+        separator: ','
+        tableName: address
+
+- changeSet:
+    id: 1726349917593-7
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: store_id
+            name: store_id
+            type: NUMERIC
+        - column:
+            header: manager_staff_id
+            name: manager_staff_id
+            type: NUMERIC
+        - column:
+            header: address_id
+            name: address_id
+            type: NUMERIC
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/store.csv
+        quotchar: '"'
+        separator: ','
+        tableName: store
+
+- changeSet:
+    id: 1726349917593-8
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: film_id
+            name: film_id
+            type: NUMERIC
+        - column:
+            header: title
+            name: title
+            type: STRING
+        - column:
+            header: description
+            name: description
+            type: STRING
+        - column:
+            header: release_year
+            name: release_year
+            type: NUMERIC
+        - column:
+            header: language_id
+            name: language_id
+            type: NUMERIC
+        - column:
+            header: original_language_id
+            name: original_language_id
+            type: skip
+        - column:
+            header: rental_duration
+            name: rental_duration
+            type: NUMERIC
+        - column:
+            header: rental_rate
+            name: rental_rate
+            type: NUMERIC
+        - column:
+            header: length
+            name: length
+            type: NUMERIC
+        - column:
+            header: replacement_cost
+            name: replacement_cost
+            type: NUMERIC
+        - column:
+            header: rating
+            name: rating
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        - column:
+            header: special_features
+            name: special_features
+            type: STRING
+        - column:
+            header: fulltext
+            name: fulltext
+            type: STRING
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/film.csv
+        quotchar: '"'
+        separator: ','
+        tableName: film
+
+- changeSet:
+    id: 1726349917593-9
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: staff_id
+            name: staff_id
+            type: NUMERIC
+        - column:
+            header: first_name
+            name: first_name
+            type: STRING
+        - column:
+            header: last_name
+            name: last_name
+            type: STRING
+        - column:
+            header: address_id
+            name: address_id
+            type: NUMERIC
+        - column:
+            header: email
+            name: email
+            type: STRING
+        - column:
+            header: store_id
+            name: store_id
+            type: NUMERIC
+        - column:
+            header: active
+            name: active
+            type: BOOLEAN
+        - column:
+            header: username
+            name: username
+            type: STRING
+        - column:
+            header: password
+            name: password
+            type: STRING
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        - column:
+            header: picture
+            name: picture
+            type: BYTEA
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/staff.csv
+        quotchar: '"'
+        separator: ','
+        tableName: staff
+
+- changeSet:
+    id: 1726349917593-10
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: customer_id
+            name: customer_id
+            type: NUMERIC
+        - column:
+            header: store_id
+            name: store_id
+            type: NUMERIC
+        - column:
+            header: first_name
+            name: first_name
+            type: STRING
+        - column:
+            header: last_name
+            name: last_name
+            type: STRING
+        - column:
+            header: email
+            name: email
+            type: STRING
+        - column:
+            header: address_id
+            name: address_id
+            type: NUMERIC
+        - column:
+            header: activebool
+            name: activebool
+            type: BOOLEAN
+        - column:
+            header: create_date
+            name: create_date
+            type: DATE
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        - column:
+            header: active
+            name: active
+            type: NUMERIC
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/customer.csv
+        quotchar: '"'
+        separator: ','
+        tableName: customer
+
+
+- changeSet:
+    id: 1726349917593-11
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: inventory_id
+            name: inventory_id
+            type: NUMERIC
+        - column:
+            header: film_id
+            name: film_id
+            type: NUMERIC
+        - column:
+            header: store_id
+            name: store_id
+            type: NUMERIC
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/inventory.csv
+        quotchar: '"'
+        separator: ','
+        tableName: inventory
+
+- changeSet:
+    id: 1726349917593-12
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: payment_id
+            name: payment_id
+            type: NUMERIC
+        - column:
+            header: customer_id
+            name: customer_id
+            type: NUMERIC
+        - column:
+            header: staff_id
+            name: staff_id
+            type: NUMERIC
+        - column:
+            header: rental_id
+            name: rental_id
+            type: NUMERIC
+        - column:
+            header: amount
+            name: amount
+            type: NUMERIC
+        - column:
+            header: payment_date
+            name: payment_date
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/payment.csv
+        quotchar: '"'
+        separator: ','
+        tableName: payment
+
+- changeSet:
+    id: 1726349917593-13
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: actor_id
+            name: actor_id
+            type: NUMERIC
+        - column:
+            header: film_id
+            name: film_id
+            type: NUMERIC
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/film_actor.csv
+        quotchar: '"'
+        separator: ','
+        tableName: film_actor
+
+- changeSet:
+    id: 1726349917593-14
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: film_id
+            name: film_id
+            type: NUMERIC
+        - column:
+            header: category_id
+            name: category_id
+            type: NUMERIC
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/film_category.csv
+        quotchar: '"'
+        separator: ','
+        tableName: film_category
+
+- changeSet:
+    id: 1726349917593-15
+    author: querytool
+    changes:
+    - loadData:
+        columns:
+        - column:
+            header: rental_id
+            name: rental_id
+            type: NUMERIC
+        - column:
+            header: rental_date
+            name: rental_date
+            type: DATE
+        - column:
+            header: inventory_id
+            name: inventory_id
+            type: NUMERIC
+        - column:
+            header: customer_id
+            name: customer_id
+            type: NUMERIC
+        - column:
+            header: return_date
+            name: return_date
+            type: DATE
+        - column:
+            header: staff_id
+            name: staff_id
+            type: NUMERIC
+        - column:
+            header: last_update
+            name: last_update
+            type: DATE
+        commentLineStartsWith: '#'
+        encoding: UTF-8
+        relativeToChangelogFile: true
+        file: ../data/rental.csv
+        quotchar: '"'
+        separator: ','
+        tableName: rental
