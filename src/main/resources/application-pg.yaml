@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:25432/test
+    url: jdbc:postgresql://localhost:25432/querytool?currentSchema=querytool
     driver-class-name: org.postgresql.Driver
     username: querytool
     password: S3cret

@@ -22,15 +22,15 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: first_name
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
             name: last_name
-            type: VARCHAR(256)
+            type: VARCHAR(128)
         - column:
             name: email
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
@@ -87,12 +87,12 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: first_name
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
             name: last_name
-            type: VARCHAR(256)
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
@@ -131,7 +131,7 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: name
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
@@ -237,15 +237,15 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: address
-            type: TEXT
+            type: VARCHAR(256)
         - column:
             name: address2
-            type: TEXT
+            type: VARCHAR(256)
         - column:
             constraints:
               nullable: false
             name: district
-            type: TEXT
+            type: VARCHAR(64)
         - column:
             constraints:
               nullable: false
@@ -253,12 +253,12 @@ databaseChangeLog:
             type: INTEGER
         - column:
             name: postal_code
-            type: TEXT
+            type: VARCHAR(16)
         - column:
             constraints:
               nullable: false
             name: phone
-            type: TEXT
+            type: VARCHAR(32)
         - column:
             constraints:
               nullable: false
@@ -297,7 +297,7 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: city
-            type: TEXT
+            type: VARCHAR(80)
         - column:
             constraints:
               nullable: false
@@ -341,7 +341,7 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: country
-            type: TEXT
+            type: VARCHAR(64)
         - column:
             constraints:
               nullable: false
@@ -571,12 +571,12 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: first_name
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
             name: last_name
-            type: VARCHAR(256)
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
@@ -584,7 +584,7 @@ databaseChangeLog:
             type: INTEGER
         - column:
             name: email
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
@@ -600,10 +600,10 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: username
-            type: TEXT
+            type: VARCHAR(64)
         - column:
             name: password
-            type: TEXT
+            type: VARCHAR(512)
         - column:
             constraints:
               nullable: false
@@ -758,7 +758,7 @@ databaseChangeLog:
             type: VARCHAR(256)
         - column:
             name: description
-            type: TEXT
+            type: VARCHAR(512)
         - column:
             name: release_year
 #            type: YEAR(10)
@@ -806,13 +806,13 @@ databaseChangeLog:
         - column:
             name: special_features
 #            type: TEXT[]
-            type: TEXT
+            type: VARCHAR(128)
         - column:
             constraints:
               nullable: false
             name: fulltext
 #            type: TSVECTOR
-            type: VARCHAR(256)
+            type: VARCHAR(512)
         tableName: film
 #- changeSet:
 #    id: 1726349197863-34

@@ -10,9 +10,11 @@ import java.util.Map;
 public class Controller {
 
     private final QueryService queryService;
+    private final QueryToolConfiguration configuration;
 
-    public Controller(QueryService queryService) {
+    public Controller(QueryService queryService, QueryToolConfiguration configuration) {
         this.queryService = queryService;
+        this.configuration = configuration;
     }
 
     @PostMapping(value="/query", consumes = "text/plain", produces = "text/tab-separated-values")
@@ -23,6 +25,11 @@ public class Controller {
     @GetMapping("/queries")
     public Map<String, String> getSqlByKey() {
         return queryService.getQueries();
+    }
+
+    @GetMapping("/configuration")
+    public QueryToolConfiguration getConfiguration() {
+        return configuration;
     }
 
     @GetMapping(value="/query/{key}", produces = "text/tab-separated-values")

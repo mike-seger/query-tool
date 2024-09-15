@@ -1,0 +1,159 @@
+class QueryManager {
+    constructor() {
+        this.init();
+    }
+
+    async init() {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await this.loadQueries();
+            this.loadSQLHistory();
+
+            const listBox = document.getElementById('queries');
+            if (listBox.value) {
+                await this.updateSQLAndExecute(listBox.value);
+            }
+
+            // Add event listeners
+            document.getElementById('run-query-btn').addEventListener('click', () => this.runQuery());
+            document.getElementById('delete-entry-btn').addEventListener('click', () => this.deleteHistoryEntry());
+            document.getElementById('query-history').addEventListener('change', () => this.selectHistoryEntry());
+        });
+    }
+
+    async loadQueries() {
+        try {
+            const response = await fetch('/api/query-tool/queries');
+            const queries = await response.json();
+            const listBox = document.getElementById('queries');
+            listBox.innerHTML = Object.entries(queries)
+                .map(([key, value]) => `<option value="${value.trim()}">${key}</option>`)
+                .join('');
+
+            listBox.addEventListener('change', async () => {
+                await this.updateSQLAndExecute(listBox.value);
+            });
+        } catch (error) {
+            console.error('Error loading query keys:', error);
+        }
+    }
+
+    async updateSQLAndExecute(sql) {
+        try {
+            const sqlTextarea = document.getElementById('sql-textarea');
+            if (sql) {
+                sqlTextarea.value = sql;
+                await this.runQuery();
+            }
+        } catch (error) {
+            console.error('Error executing query:', error);
+        }
+    }
+
+    async runQuery(skipHistory = false) {
+        const sqlTextarea = document.getElementById('sql-textarea');
+        const sql = sqlTextarea.value;
+
+        try {
+            const response = await fetch('/api/query-tool/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+                body: sql
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            const tsvData = await response.text();
+            this.displayResultsAsTable(tsvData);
+
+            if (!skipHistory) this.addToSQLHistory(sql);
+        } catch (error) {
+            this.displayErrorResult(error);
+            console.error('Error running query:', error);
+        }
+    }
+
+    displayErrorResult(error) {
+        const table = document.getElementById('results-table');
+        table.innerHTML = `<tr><td><pre>${error}</pre></td></tr>`;
+    }
+
+    displayResultsAsTable(tsvData) {
+        const table = document.getElementById('results-table');
+        table.innerHTML = '';
+
+        if (!tsvData.trim()) {
+            table.innerHTML = '<tr><td>No results found</td></tr>';
+            return;
+        }
+
+        const rows = tsvData.trim().split('\n');
+        const headers = rows[0].split('\t');
+        const headerRow = '<tr>' + headers.map(header => `<th>${header}</th>`).join('') + '</tr>';
+        table.innerHTML += headerRow;
+
+        for (let i = 1; i < rows.length; i++) {
+            const rowData = rows[i].split('\t');
+            const row = '<tr>' + rowData.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
+            table.innerHTML += row;
+        }
+    }
+
+    addToSQLHistory(sql) {
+        let history = JSON.parse(localStorage.getItem('sqlHistory')) || [];
+        const standardQueries = Array.from(document.getElementById('queries').options).map(option => option.value);
+
+        if (!history.includes(sql) && !standardQueries.includes(sql)) {
+            history.unshift(sql);
+        }
+
+        if (history.length > 50) {
+            history = history.slice(0, 50);
+        }
+
+        localStorage.setItem('sqlHistory', JSON.stringify(history));
+        this.updateSQLHistoryListbox();
+    }
+
+    loadSQLHistory() {
+        const history = JSON.parse(localStorage.getItem('sqlHistory')) || [];
+        this.updateSQLHistoryListbox(history);
+    }
+
+    updateSQLHistoryListbox() {
+        const history = JSON.parse(localStorage.getItem('sqlHistory')) || [];
+        const historyListbox = document.getElementById('query-history');
+
+        historyListbox.innerHTML = history.map((sql, index) => {
+            const displayValue = sql.trim()
+                .replace(/  */g, ' ').replace(/\n/g, ' ').slice(0, 50);
+            const prefix = String(index + 1).padStart(2, '0');
+            return `<option value="${sql}">${prefix} ${displayValue}</option>`;
+        }).join('');
+    }
+
+    deleteHistoryEntry() {
+        const historyListbox = document.getElementById('query-history');
+        const selectedSQL = historyListbox.value;
+
+        if (selectedSQL) {
+            let history = JSON.parse(localStorage.getItem('sqlHistory')) || [];
+            history = history.filter(sql => sql !== selectedSQL);
+            localStorage.setItem('sqlHistory', JSON.stringify(history));
+            this.updateSQLHistoryListbox();
+        }
+    }
+
+    selectHistoryEntry() {
+        const selectedSQL = document.getElementById('query-history').value;
+        if (selectedSQL) {
+            document.getElementById('sql-textarea').value = selectedSQL;
+            this.runQuery(true);
+        }
+    }
+}
+
+const queryManager = new QueryManager();

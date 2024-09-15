@@ -1,10 +1,12 @@
 services:
   postgres:
-    image: postgres:14-alpine
+    image: postgres:16-alpine
+    container_name: querytool_db
     ports:
       - 25432:5432
     volumes:
       - ./:/opt
+      - ./src/test/resources/dataload/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=S3cret
       - POSTGRES_USER=querytool

@@ -121,7 +121,7 @@ public class QueryService {
             name -> {
                 if(name.matches("^[a-z0-9]+__.*")) {
                     if(isDbSpecificQuery(name))  {
-                        var newName=name.replaceAll(".*__", "").replace("_", " ");
+                        var newName=name.replaceAll(".*__", "○ ").replace("_", " ");
                         filteredQueries.put(newName, queries.get(name));
                     }
                 } else filteredQueries.put(name, queries.get(name));
