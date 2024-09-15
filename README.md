@@ -10,8 +10,11 @@ This project provides the following features:
       ![query-tool](./doc/query-tool.png)
 
 2. **Dynamic SQL Query API**
-    - The application exposes an API that allows the execution of SQL queries  and returns the results in TSV format.
-      ![Query API](./doc/swagger1.png)
+    - The application exposes an API that allows the execution of SQL queries  and returns the results in TSV format.  
+      Request:  
+      ![Query API Request](./doc/swagger1.png)  
+      Response:  
+      ![Query API Response](./doc/swagger2.png)
 
 3. **A Sample DB**
     - The application comes with a default DB based on the
