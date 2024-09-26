@@ -8,7 +8,10 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -18,8 +21,9 @@ public class QueryService {
     private final DataSource dataSource;
     private final DbType dbType;
     private final String currentSchema;
-    private final LinkedHashMap<String, String> predefinedQueries;
+    private final LinkedHashMap<String, Query> predefinedQueries;
     private final LinkedHashMap<String, String> queries;
+    private final AsyncCacheManager<String> asyncCacheManager;
 
     public QueryService(JdbcTemplate jdbcTemplate,
             QueryToolConfiguration queryToolConfiguration, DataSource dataSource) {
@@ -28,6 +32,7 @@ public class QueryService {
         this.dataSource = dataSource;
         this.dbType = DbType.fromString(getDatabaseType().toLowerCase());
         this.currentSchema = getCurrentSchema();
+        this.asyncCacheManager = new AsyncCacheManager<>();
         this.predefinedQueries = getPredefinedQueries();
         this.queries = getQueries();
     }
@@ -42,12 +47,21 @@ public class QueryService {
     public String executeQueryByKey(String key) throws SQLException {
         var sql = getQueries().get(key);
         if (sql == null) throw new IllegalArgumentException("Invalid key: " + key);
-        return executeQueryPrivate(sql);
+        try {
+            return asyncCacheManager.readEntry(key).get();
+        } catch (Exception e) {
+            throw new SQLException(e);
+        }
     }
 
     public LinkedHashMap<String, String> getQueries() {
         if(queries!=null) return queries;
-        var queries = new LinkedHashMap<>(getPredefinedQueries());
+        LinkedHashMap<String, String> queries = getPredefinedQueries().entrySet().stream().collect(Collectors.toMap(
+            Map.Entry::getKey,
+            entry -> entry.getValue().sql(),
+            (oldValue, newValue) -> oldValue,
+            LinkedHashMap::new
+        ));
         if(queryToolConfiguration.isCustomQueries())
             getTables(true).stream().sorted().forEach(name -> queries.put(
                 name.toLowerCase(), String.format("select * from %s limit 100", name)));
@@ -125,11 +139,11 @@ public class QueryService {
         return tables;
     }
 
-    private LinkedHashMap<String, String> getPredefinedQueries() {
+    private LinkedHashMap<String, Query> getPredefinedQueries() {
         if(predefinedQueries!=null) return predefinedQueries;
         var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
         var queryNames = new LinkedHashSet<>(queries.keySet());
-        var filteredQueries = new LinkedHashMap<String, String>();
+        var filteredQueries = new LinkedHashMap<String, Query>();
         queryNames.forEach(
             name -> {
                 if(name.matches("^[a-z0-9]+__.*")) {
@@ -141,6 +155,17 @@ public class QueryService {
             }
         );
 
+        for (Map.Entry<String, Query> entry : filteredQueries.entrySet()) {
+            String key = entry.getKey();
+            Query query = entry.getValue();
+            asyncCacheManager.addEntry(key,
+                query.maxTTL()==null?Duration.ofMinutes(60):query.maxTTL(),
+                query.minTTL()==null?Duration.ofSeconds(10):query.minTTL(),
+                q -> CompletableFuture.supplyAsync(() -> {
+                    try { return executeQueryPrivate(query.sql());
+                    } catch (SQLException e) { throw new RuntimeException(e); }
+                }));
+        }
         return filteredQueries;
     }
 
@@ -149,18 +174,5 @@ public class QueryService {
             (name.startsWith("postgres__")&&dbType==DbType.postgres) ||
             (name.startsWith("oracle__")&&dbType==DbType.oracle) ||
             (name.startsWith("mysql__")&&dbType==DbType.mysql);
-    }
-
-    private enum DbType {
-        h2, postgres, mysql, oracle, unsupported;
-        public static DbType fromString(String dbTypeString) {
-            var s = dbTypeString.toLowerCase();
-            if(s.contains("postgres")) return postgres;
-            else if(s.contains("h2")) return h2;
-            else if(s.contains("oracle")) return oracle;
-            else if(s.contains("mysql")) return mysql;
-            else if(s.contains("maria")) return mysql;
-            return unsupported;
-        }
     }
 }

@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        springBootVersion = "2.7.18"
-        //springBootVersion = "3.3.0"
+        //springBootVersion = "2.7.18"
+        springBootVersion = "3.3.0"
     }
 }
 
@@ -13,6 +13,10 @@ plugins {
 allprojects {
     group = 'com.net128.oss.querytool'
     version = '0.0.1-SNAPSHOT'
+
+    tasks.withType(Javadoc).configureEach {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
 
     repositories {
         mavenCentral()

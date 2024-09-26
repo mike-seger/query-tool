@@ -11,6 +11,6 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "com.net128.query-tool")
 @Data
 public class QueryToolConfiguration {
-    private Map<String, String> queries = new LinkedHashMap<>();
+    private Map<String, Query> queries = new LinkedHashMap<>();
     private boolean customQueries = false;
 }

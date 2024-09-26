@@ -33,7 +33,7 @@ public class Controller {
     }
 
     @GetMapping(value="/query/{key}", produces = "text/tab-separated-values")
-    public String executeQueryByKey(@PathVariable String key) throws SQLException {
+    public String executeQueryByKey(@PathVariable(name = "key") String key) throws SQLException {
         return queryService.executeQueryByKey(key);
     }
 }
