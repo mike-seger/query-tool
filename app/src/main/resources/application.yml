@@ -24,10 +24,20 @@ com.net128.query-tool:
   custom-queries: true
   minTTL: PT0.2s
   maxTTL: 60m
-  subquery_rented: |
-      select inventory_id, count(*) rented
-      from rental
-      group by inventory_id
+  subquery:
+    rented: |
+        select inventory_id, count(*) rented
+        from rental
+        group by inventory_id
+    random-fields1: |
+      row_number() over () as id,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH24:MI:SS') as "timestamp",
+      floor(random() * 1000) as "field1",  -- random integer between 0 and 999
+      floor(random() * 1000) as "field2",  -- random integer between 0 and 999
+      floor(random() * 1000) as "field3",  -- random integer between 0 and 999
+      floor(random() * 1000) as "field4",  -- random integer between 0 and 999
+      floor(random() * 1000) as "field5",  -- random integer between 0 and 999
+
   queries:
     "[postgres:table counts]":
       sql: |
@@ -55,23 +65,23 @@ com.net128.query-tool:
         from pg_stat_activity
         where pg_stat_activity.query_start is not null
         order by backend_start
-    "[current time]":
-      minTTL: 10s
-      maxTTL: 60m
-      sql: |
-        select current_timestamp
     "[postgres:locks]":
       sql: |
         select *
         from pg_locks
         join pg_stat_activity on pg_locks.pid = pg_stat_activity.pid
         order by backend_start desc
+    "[current time]":
+      minTTL: 10s
+      maxTTL: 60m
+      sql: |
+        select current_timestamp
     "[top 100 rented]":
       sql: |
         select description, rented from
           (select film_id, rented from
             (select * from (
-              ${com.net128.query-tool.subquery_rented}
+              ${com.net128.query-tool.subquery.rented}
             ) res
             order by rented desc
             limit 100) res2
@@ -82,13 +92,7 @@ com.net128.query-tool:
       maxTTL: 10m
       sql: |
         select
-          row_number() over () as id,
-          to_char(current_timestamp, 'YYYY-MM-DD"T"HH24:MI:SS') as "timestamp",
-          floor(random() * 1000) as "field1",  -- random integer between 0 and 999
-          floor(random() * 1000) as "field2",  -- random integer between 0 and 999
-          floor(random() * 1000) as "field3",  -- random integer between 0 and 999
-          floor(random() * 1000) as "field4",  -- random integer between 0 and 999
-          floor(random() * 1000) as "field5",  -- random integer between 0 and 999
+          ${com.net128.query-tool.subquery.random-fields1}
           (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
             from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field6",  -- random string (1-10 chars)
           (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
@@ -106,13 +110,7 @@ com.net128.query-tool:
       sql: |
         with num_fields as (
           select
-          row_number() over () as id,
-            to_char(current_timestamp, 'YYYY-MM-DD"T"HH24:MI:SS') as "timestamp",
-            floor(random() * 1000) as "field1",  -- random integer between 0 and 999
-            floor(random() * 1000) as "field2",  -- random integer between 0 and 999
-            floor(random() * 1000) as "field3",  -- random integer between 0 and 999
-            floor(random() * 1000) as "field4",  -- random integer between 0 and 999
-            floor(random() * 1000) as "field5"   -- random integer between 0 and 999
+            ${com.net128.query-tool.subquery.random-fields1}
           from generate_series(1, 10)
         )
         select
