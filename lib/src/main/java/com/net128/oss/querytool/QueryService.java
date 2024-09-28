@@ -5,8 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
@@ -22,7 +20,7 @@ public class QueryService {
     private final DbType dbType;
     private final String currentSchema;
     private final LinkedHashMap<String, Query> predefinedQueries;
-    private final LinkedHashMap<String, String> queries;
+    //private final LinkedHashMap<String, String> queries;
     private final AsyncCacheManager<String> asyncCacheManager;
 
     public QueryService(JdbcTemplate jdbcTemplate,
@@ -34,19 +32,21 @@ public class QueryService {
         this.currentSchema = getCurrentSchema();
         this.asyncCacheManager = new AsyncCacheManager<>();
         this.predefinedQueries = getPredefinedQueries();
-        this.queries = getQueries();
+        //this.queries = getQueries();
     }
 
     public String executeQuery(String sql) throws SQLException {
         if(!queryToolConfiguration.isCustomQueries())
             throw new SQLException(
                 "The current QueryToolConfiguration doesn't allow arbitrary queries");
-        return executeQueryPrivate(sql);
+        var key = sql.trim();
+        if(asyncCacheManager.readEntry(key) == null)
+            addEntryToCache(key, sql, null, null);
+        return executeQueryByKey(sql);
     }
 
     public String executeQueryByKey(String key) throws SQLException {
-        var sql = getQueries().get(key);
-        if (sql == null) throw new IllegalArgumentException("Invalid key: " + key);
+        if(asyncCacheManager.readEntry(key) == null)  throw new IllegalArgumentException("Invalid key: " + key);
         try {
             return asyncCacheManager.readEntry(key).get();
         } catch (Exception e) {
@@ -54,17 +54,19 @@ public class QueryService {
         }
     }
 
-    public LinkedHashMap<String, String> getQueries() {
-        if(queries!=null) return queries;
-        LinkedHashMap<String, String> queries = getPredefinedQueries().entrySet().stream().collect(Collectors.toMap(
-            Map.Entry::getKey,
-            entry -> entry.getValue().sql(),
-            (oldValue, newValue) -> oldValue,
-            LinkedHashMap::new
-        ));
+    public LinkedHashMap<String, Query> getQueries() {
+        if(predefinedQueries!=null) return predefinedQueries;
+        LinkedHashMap<String, Query> queries = getPredefinedQueries();
+//        LinkedHashMap<String, String> queries = getPredefinedQueries().entrySet().stream().collect(Collectors.toMap(
+//            Map.Entry::getKey,
+//            entry -> entry.getValue().sql(),
+//            (oldValue, newValue) -> oldValue,
+//            LinkedHashMap::new
+//        ));
         if(queryToolConfiguration.isCustomQueries())
             getTables(true).stream().sorted().forEach(name -> queries.put(
-                name.toLowerCase(), String.format("select * from %s limit 100", name)));
+                name.toLowerCase(),
+                new Query(String.format("select * from %s limit 100", name), null, null, null, name)));
         return queries;
     }
 
@@ -112,8 +114,8 @@ public class QueryService {
     }
 
     private String getCurrentSchema() {
-        try (Connection connection = dataSource.getConnection()) {
-            try (ResultSet rs = connection.createStatement().executeQuery("SELECT current_schema()")) {
+        try (var connection = dataSource.getConnection()) {
+            try (var rs = connection.createStatement().executeQuery("SELECT current_schema()")) {
                 if (rs.next()) return rs.getString(1);
             }
         } catch(Exception e) {
@@ -142,31 +144,27 @@ public class QueryService {
     private LinkedHashMap<String, Query> getPredefinedQueries() {
         if(predefinedQueries!=null) return predefinedQueries;
         var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
-        var queryNames = new LinkedHashSet<>(queries.keySet());
         var filteredQueries = new LinkedHashMap<String, Query>();
-        queryNames.forEach(
-            name -> {
-                if(name.matches("^[a-z0-9]+__.*")) {
-                    if(isDbSpecificQuery(name))  {
-                        var newName=name.replaceAll(".*__", "○ ").replace("_", " ");
-                        filteredQueries.put(newName, queries.get(name));
-                    }
-                } else filteredQueries.put(name, queries.get(name));
-            }
-        );
+        queries.forEach((name, value) -> {
+            if (name.matches("^[a-z0-9]+__.*")) {
+                if (isDbSpecificQuery(name)) {
+                    filteredQueries.put(name, queries.get(name));
+                }
+            } else filteredQueries.put(name, queries.get(name));
+        });
 
-        for (Map.Entry<String, Query> entry : filteredQueries.entrySet()) {
-            String key = entry.getKey();
-            Query query = entry.getValue();
-            asyncCacheManager.addEntry(key,
-                query.maxTTL()==null?Duration.ofMinutes(60):query.maxTTL(),
-                query.minTTL()==null?Duration.ofSeconds(10):query.minTTL(),
-                q -> CompletableFuture.supplyAsync(() -> {
-                    try { return executeQueryPrivate(query.sql());
-                    } catch (SQLException e) { throw new RuntimeException(e); }
-                }));
-        }
+        filteredQueries.forEach((key, query) -> addEntryToCache(key, query.sql(), query.maxTTL(), query.minTTL()));
         return filteredQueries;
+    }
+
+    private void addEntryToCache(String key, String sql, Duration maxTTL, Duration minTTL) {
+        asyncCacheManager.addEntry(key,
+            maxTTL==null?queryToolConfiguration.getMaxTTL():maxTTL,
+            minTTL==null?queryToolConfiguration.getMinTTL():minTTL,
+            q -> CompletableFuture.supplyAsync(() -> {
+                try { return executeQueryPrivate(sql);
+                } catch (SQLException e) { throw new RuntimeException(e); }
+            }));
     }
 
     private boolean isDbSpecificQuery(String name) {

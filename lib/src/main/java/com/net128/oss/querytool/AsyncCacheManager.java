@@ -28,6 +28,7 @@ public class AsyncCacheManager<T> {
 
     public CompletableFuture<T> readEntry(String key) {
         CacheEntryMetadata<T> metadata = entryMetadataMap.get(key);
+        if(metadata==null) return null;
         return cache.get(key).thenApply(value -> {
             var elapsedTime = getTimeElapsedSinceLastAccess(key);
             var elapsedDuration = Duration.ofMillis(elapsedTime);

@@ -2,7 +2,7 @@ springdoc.swagger-ui.path: /swagger-ui.html
 
 spring:
   datasource:
-    url: jdbc:h2:mem:lib;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:querytool;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -57,12 +57,6 @@ com.net128.query-tool:
         from pg_stat_activity
         where pg_stat_activity.query_start is not null
         order by backend_start
-    h2__current_time:
-      dbType: h2
-      minTTL: 10s
-      maxTTL: 60m
-      sql: |
-        select CURRENT_TIMESTAMP
     postgres__current_time:
       dbType: postgres
       minTTL: 10s
@@ -87,3 +81,47 @@ com.net128.query-tool:
             limit 100) res2
           join inventory on res2.inventory_id = inventory.inventory_id) res3
         join film on res3.film_id = film.film_id
+    "[h2__random data (auto_refresh)]":
+      minTTL: 1s
+      maxTTL: 10m
+      sql: |
+        select
+          row_number() over () as id,
+          to_char(current_timestamp, 'YYYY-MM-DD"T"HH24:MI:SS') as "timestamp",
+          floor(random() * 1000) as "field1",  -- random integer between 0 and 999
+          floor(random() * 1000) as "field2",  -- random integer between 0 and 999
+          floor(random() * 1000) as "field3",  -- random integer between 0 and 999
+          floor(random() * 1000) as "field4",  -- random integer between 0 and 999
+          floor(random() * 1000) as "field5",  -- random integer between 0 and 999
+          (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
+            from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field6",  -- random string (1-10 chars)
+          (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
+            from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field7",  -- random string (1-10 chars)
+          (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
+            from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field8"   -- random string (1-10 chars)
+        from (
+        select 1
+        from information_schema.columns  -- just a table with more than 10 rows
+        limit 10  -- limit to 10 rows
+        ) as temp
+    "[postgres__random data (auto refresh)]":
+      minTTL: 1s
+      maxTTL: 10m
+      sql: |
+        with num_fields as (
+          select
+          row_number() over () as id,
+            to_char(current_timestamp, 'YYYY-MM-DD"T"HH24:MI:SS') as "timestamp",
+            floor(random() * 1000) as "field1",  -- random integer between 0 and 999
+            floor(random() * 1000) as "field2",  -- random integer between 0 and 999
+            floor(random() * 1000) as "field3",  -- random integer between 0 and 999
+            floor(random() * 1000) as "field4",  -- random integer between 0 and 999
+            floor(random() * 1000) as "field5"   -- random integer between 0 and 999
+          from generate_series(1, 10)
+        )
+        select
+          id,"timestamp","field1","field2","field3","field4","field5",
+          md5("field1"::text || "field2"::text || random()::text) as "field6",  -- random string based on numeric "fields" and random()
+          md5("field2"::text || "field3"::text || random()::text) as "field7",  -- another random string based on different numeric "fields"
+          md5("field3"::text || "field4"::text || random()::text) as "field8"   -- yet another random string
+        from num_fields

@@ -23,7 +23,7 @@ public class Controller {
     }
 
     @GetMapping("/queries")
-    public Map<String, String> getQueries() {
+    public Map<String, Query> getQueries() {
         return queryService.getQueries();
     }
 
