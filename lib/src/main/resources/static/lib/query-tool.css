@@ -37,3 +37,6 @@ th {
 .button-delete {
     margin-left: 10px;
 }
+.history-controls {
+    display: none;
+}

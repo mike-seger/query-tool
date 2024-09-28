@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -20,7 +19,6 @@ public class QueryService {
     private final DbType dbType;
     private final String currentSchema;
     private final LinkedHashMap<String, Query> predefinedQueries;
-    //private final LinkedHashMap<String, String> queries;
     private final AsyncCacheManager<String> asyncCacheManager;
 
     public QueryService(JdbcTemplate jdbcTemplate,
@@ -32,7 +30,6 @@ public class QueryService {
         this.currentSchema = getCurrentSchema();
         this.asyncCacheManager = new AsyncCacheManager<>();
         this.predefinedQueries = getPredefinedQueries();
-        //this.queries = getQueries();
     }
 
     public String executeQuery(String sql) throws SQLException {
@@ -46,6 +43,7 @@ public class QueryService {
     }
 
     public String executeQueryByKey(String key) throws SQLException {
+        key = key.trim();
         if(asyncCacheManager.readEntry(key) == null)  throw new IllegalArgumentException("Invalid key: " + key);
         try {
             return asyncCacheManager.readEntry(key).get();
@@ -57,21 +55,15 @@ public class QueryService {
     public LinkedHashMap<String, Query> getQueries() {
         if(predefinedQueries!=null) return predefinedQueries;
         LinkedHashMap<String, Query> queries = getPredefinedQueries();
-//        LinkedHashMap<String, String> queries = getPredefinedQueries().entrySet().stream().collect(Collectors.toMap(
-//            Map.Entry::getKey,
-//            entry -> entry.getValue().sql(),
-//            (oldValue, newValue) -> oldValue,
-//            LinkedHashMap::new
-//        ));
         if(queryToolConfiguration.isCustomQueries())
             getTables(true).stream().sorted().forEach(name -> queries.put(
                 name.toLowerCase(),
-                new Query(String.format("select * from %s limit 100", name), null, null, null, name)));
+                new Query(String.format("select * from %s limit 100", name), null, null)));
         return queries;
     }
 
     private String escapeChars(String s) {
-        if(s==null) return s;
+        if(s==null) return null;
         return s.replace("\t", "\\t").replace("\n", "\\n");
     }
 
@@ -124,6 +116,7 @@ public class QueryService {
         return null;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private List<String> getTables(boolean onlyCurrentSchema) {
         var tables = new ArrayList<String>();
         try (var connection = dataSource.getConnection()) {
@@ -146,7 +139,7 @@ public class QueryService {
         var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
         var filteredQueries = new LinkedHashMap<String, Query>();
         queries.forEach((name, value) -> {
-            if (name.matches("^[a-z0-9]+__.*")) {
+            if (name.matches("^[a-z0-9]+:.*")) {
                 if (isDbSpecificQuery(name)) {
                     filteredQueries.put(name, queries.get(name));
                 }
@@ -158,7 +151,7 @@ public class QueryService {
     }
 
     private void addEntryToCache(String key, String sql, Duration maxTTL, Duration minTTL) {
-        asyncCacheManager.addEntry(key,
+        asyncCacheManager.addEntry(key.trim(),
             maxTTL==null?queryToolConfiguration.getMaxTTL():maxTTL,
             minTTL==null?queryToolConfiguration.getMinTTL():minTTL,
             q -> CompletableFuture.supplyAsync(() -> {
@@ -168,9 +161,9 @@ public class QueryService {
     }
 
     private boolean isDbSpecificQuery(String name) {
-        return (name.startsWith("h2__")&&dbType==DbType.h2) ||
-            (name.startsWith("postgres__")&&dbType==DbType.postgres) ||
-            (name.startsWith("oracle__")&&dbType==DbType.oracle) ||
-            (name.startsWith("mysql__")&&dbType==DbType.mysql);
+        return (name.startsWith("h2:")&&dbType==DbType.h2) ||
+            (name.startsWith("postgres:")&&dbType==DbType.postgres) ||
+            (name.startsWith("oracle:")&&dbType==DbType.oracle) ||
+            (name.startsWith("mysql:")&&dbType==DbType.mysql);
     }
 }
