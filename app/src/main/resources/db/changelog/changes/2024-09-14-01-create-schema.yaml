@@ -51,7 +51,7 @@ databaseChangeLog:
         - column:
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         - column:
             name: active
             type: INTEGER
@@ -59,6 +59,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-2
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -98,11 +99,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: actor
 - changeSet:
     id: 1726349197863-4
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -137,11 +139,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: category
 - changeSet:
     id: 1726349197863-6
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -155,6 +158,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-7
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -190,7 +194,7 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: film_actor
 - changeSet:
     id: 1726349197863-9
@@ -217,7 +221,7 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: film_category
 - changeSet:
     id: 1726349197863-10
@@ -264,11 +268,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: address
 - changeSet:
     id: 1726349197863-11
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -308,11 +313,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: city
 - changeSet:
     id: 1726349197863-13
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -347,11 +353,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: country
 - changeSet:
     id: 1726349197863-15
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -391,11 +398,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: inventory
 - changeSet:
     id: 1726349197863-17
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -430,11 +438,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: language
 - changeSet:
     id: 1726349197863-19
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -455,6 +464,7 @@ databaseChangeLog:
             autoIncrement: true
             constraints:
               nullable: false
+              primaryKey: true
             name: payment_id
             type: INTEGER
         - column:
@@ -481,11 +491,12 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: payment_date
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: payment
 - changeSet:
     id: 1726349197863-21
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -514,7 +525,7 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: rental_date
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         - column:
             constraints:
               nullable: false
@@ -527,7 +538,7 @@ databaseChangeLog:
             type: INTEGER
         - column:
             name: return_date
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         - column:
             constraints:
               nullable: false
@@ -538,11 +549,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: rental
 - changeSet:
     id: 1726349197863-23
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -556,6 +568,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-24
     author: lib
+    dbms: "!mysql"
     changes:
     - createTable:
         columns:
@@ -609,7 +622,7 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         - column:
             name: picture
             type: BYTEA
@@ -617,6 +630,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-25
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -656,11 +670,12 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         tableName: store
 - changeSet:
     id: 1726349197863-27
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createSequence:
         cacheSize: 1
@@ -674,6 +689,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-28
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createView:
         fullDefinition: false
@@ -802,7 +818,7 @@ databaseChangeLog:
               nullable: false
             defaultValueComputed: now()
             name: last_update
-            type: TIMESTAMP WITH TIME ZONE
+            type: TIMESTAMP
         - column:
             name: special_features
 #            type: TEXT[]
@@ -911,6 +927,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-39
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createView:
         fullDefinition: false
@@ -932,6 +949,7 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-40
     author: lib
+    dbms: "h2,postgresql"
     changes:
     - createView:
         fullDefinition: false
@@ -1047,14 +1065,15 @@ databaseChangeLog:
             name: original_language_id
         indexName: idx_fk_original_language_id
         tableName: film
-- changeSet:
-    id: 1726349197863-77
-    author: lib
-    changes:
-    - addPrimaryKey:
-        columnNames: payment_date, payment_id
-        constraintName: payment_pkey
-        tableName: payment
+#- changeSet:
+#    id: 1726349197863-77
+#    author: lib
+#    dbms: "h2,postgresql"
+#    changes:
+#    - addPrimaryKey:
+#        columnNames: payment_date, payment_id
+#        constraintName: payment_pkey
+#        tableName: payment
 - changeSet:
     id: 1726349197863-78
     author: lib

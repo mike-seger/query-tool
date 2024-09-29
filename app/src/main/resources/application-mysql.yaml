@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:23306/querytool?permitMysqlScheme
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: querytool
+    password: S3cret
+    platform: mysql

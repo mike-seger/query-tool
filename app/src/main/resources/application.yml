@@ -29,14 +29,16 @@ com.net128.query-tool:
         select inventory_id, count(*) rented
         from rental
         group by inventory_id
-    random-fields1: |
-      row_number() over () as id,
-      to_char(current_timestamp, 'YYYY-MM-DD"T"HH24:MI:SS') as "timestamp",
-      floor(random() * 1000) as "field1",  -- random integer between 0 and 999
-      floor(random() * 1000) as "field2",  -- random integer between 0 and 999
-      floor(random() * 1000) as "field3",  -- random integer between 0 and 999
-      floor(random() * 1000) as "field4",  -- random integer between 0 and 999
-      floor(random() * 1000) as "field5",  -- random integer between 0 and 999
+    random-fields: |
+            substring(cast(current_timestamp as char(32)), 1, 19) as timestamp,
+            round(random() * 1000) as field1,
+            round(random() * 1000) as field2,
+            round(random() * 1000) as field3,
+            round(random() * 1000) as field4,
+            round(random() * 1000) as field5,
+            substring(md5(concat('1', random())), 1, 8) as "field6", 
+            substring(md5(concat('2', random())), 1, 16) as "field7",
+            substring(md5(concat('3', random())), 1, 20) as "field8"
 
   queries:
     "[postgres:table counts]":
@@ -87,35 +89,32 @@ com.net128.query-tool:
             limit 100) res2
           join inventory on res2.inventory_id = inventory.inventory_id) res3
         join film on res3.film_id = film.film_id
-    "[h2:random data (auto_refresh)]":
-      minTTL: 1s
-      maxTTL: 10m
-      sql: |
-        select
-          ${com.net128.query-tool.subquery.random-fields1}
-          (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
-            from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field6",  -- random string (1-10 chars)
-          (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
-            from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field7",  -- random string (1-10 chars)
-          (select string_agg(substring('abcdefghijklmnopqrstuvwxyz', cast(floor(random() * 26) + 1 as int), 1), '')
-            from (select 1 from information_schema.columns limit floor(random() * 10) + 1)) as "field8"   -- random string (1-10 chars)
-        from (
-        select 1
-        from information_schema.columns  -- just a table with more than 10 rows
-        limit 10  -- limit to 10 rows
-        ) as temp
-    "[postgres:random data (auto refresh)]":
+
+    "[random data (auto refresh)]":
       minTTL: 1s
       maxTTL: 10m
       sql: |
         with num_fields as (
           select
-            ${com.net128.query-tool.subquery.random-fields1}
+            row_number() over () as "id",
+            ${com.net128.query-tool.subquery.random-fields}
           from generate_series(1, 10)
         )
-        select
-          id,"timestamp","field1","field2","field3","field4","field5",
-          md5("field1"::text || "field2"::text || random()::text) as "field6",  -- random string based on numeric "fields" and random()
-          md5("field2"::text || "field3"::text || random()::text) as "field7",  -- another random string based on different numeric "fields"
-          md5("field3"::text || "field4"::text || random()::text) as "field8"   -- yet another random string
-        from num_fields
+        select * from num_fields
+        
+    "[mysql__random data (auto refresh)]":
+      minTTL: 1s
+      maxTTL: 10m
+      sql: |
+        with recursive num_fields as (
+          select
+            1 as id,
+            ${com.net128.query-tool.subquery.random-fields}
+          union all
+          select
+            id + 1,
+            ${com.net128.query-tool.subquery.random-fields}
+          from num_fields
+          where id < 10
+        )
+        select * from num_fields

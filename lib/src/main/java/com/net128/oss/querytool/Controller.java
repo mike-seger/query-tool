@@ -28,7 +28,7 @@ public class Controller {
 
     @GetMapping("/queries")
     public Map<String, Query> getQueries() {
-        return queryService.getQueries();
+        return queryService.getPredefinedQueries();
     }
 
     @GetMapping("/configuration")

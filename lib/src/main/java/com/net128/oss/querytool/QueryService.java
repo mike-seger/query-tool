@@ -29,6 +29,8 @@ public class QueryService {
         this.dbType = DbType.fromString(getDatabaseType().toLowerCase());
         this.currentSchema = getCurrentSchema();
         this.asyncCacheManager = new AsyncCacheManager<>();
+
+        fixSqlCompatibility(queryToolConfiguration);
         this.predefinedQueries = getPredefinedQueries();
     }
 
@@ -37,9 +39,9 @@ public class QueryService {
             throw new SQLException(
                 "The current QueryToolConfiguration doesn't allow arbitrary queries");
         var key = sql.trim();
-        if(asyncCacheManager.readEntry(key) == null)
-            addEntryToCache(key, sql, null, null);
-        return executeQueryByKey(sql);
+        if(asyncCacheManager.readEntry(key) != null) return executeQueryByKey(sql);
+            //addEntryToCache(key, sql, null, null);
+        return executeQueryPrivate(sql);
     }
 
     public String executeQueryByKey(String key) throws SQLException {
@@ -52,14 +54,25 @@ public class QueryService {
         }
     }
 
-    public LinkedHashMap<String, Query> getQueries() {
+    public LinkedHashMap<String, Query> getPredefinedQueries() {
         if(predefinedQueries!=null) return predefinedQueries;
-        LinkedHashMap<String, Query> queries = getPredefinedQueries();
+        var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
+        var predefinedQueries = new LinkedHashMap<String, Query>();
+        queries.forEach((name, value) -> {
+            if (name.matches("^[a-z0-9]+:.*")) {
+                if (isDbSpecificQuery(name)) predefinedQueries.put("• "+name, queries.get(name));
+            } else predefinedQueries.put("• "+name, queries.get(name));
+        });
+
         if(queryToolConfiguration.isCustomQueries())
-            getTables(true).stream().sorted().forEach(name -> queries.put(
-                name.toLowerCase(),
-                new Query(String.format("select * from %s limit 100", name), null, null)));
-        return queries;
+            getTables(true).forEach((table) -> {
+                var query = new Query("select * from "+table+" limit 100", null, null);
+                predefinedQueries.put(table.toLowerCase(), query);
+            });
+        predefinedQueries.forEach((key, query) ->
+            addEntryToCache(key, query.getSql(), query.getMaxTTL(), query.getMinTTL()));
+
+        return predefinedQueries;
     }
 
     private String escapeChars(String s) {
@@ -106,11 +119,12 @@ public class QueryService {
     }
 
     private String getCurrentSchema() {
-        try (var connection = dataSource.getConnection()) {
-            try (var rs = connection.createStatement().executeQuery("SELECT current_schema()")) {
-                if (rs.next()) return rs.getString(1);
-            }
-        } catch(Exception e) {
+            var currentSchemaFunction = this.dbType==DbType.mysql?"DATABASE()":"current_schema()";
+            try (var connection = dataSource.getConnection()) {
+                try (var rs = connection.createStatement().executeQuery("SELECT "+currentSchemaFunction)) {
+                    if (rs.next()) return rs.getString(1);
+                }
+            } catch(Exception e) {
             log.error("Unable to get current schema", e);
         }
         return null;
@@ -134,22 +148,6 @@ public class QueryService {
         return tables;
     }
 
-    private LinkedHashMap<String, Query> getPredefinedQueries() {
-        if(predefinedQueries!=null) return predefinedQueries;
-        var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
-        var filteredQueries = new LinkedHashMap<String, Query>();
-        queries.forEach((name, value) -> {
-            if (name.matches("^[a-z0-9]+:.*")) {
-                if (isDbSpecificQuery(name)) {
-                    filteredQueries.put(name, queries.get(name));
-                }
-            } else filteredQueries.put(name, queries.get(name));
-        });
-
-        filteredQueries.forEach((key, query) -> addEntryToCache(key, query.sql(), query.maxTTL(), query.minTTL()));
-        return filteredQueries;
-    }
-
     private void addEntryToCache(String key, String sql, Duration maxTTL, Duration minTTL) {
         asyncCacheManager.addEntry(key.trim(),
             maxTTL==null?queryToolConfiguration.getMaxTTL():maxTTL,
@@ -165,5 +163,17 @@ public class QueryService {
             (name.startsWith("postgres:")&&dbType==DbType.postgres) ||
             (name.startsWith("oracle:")&&dbType==DbType.oracle) ||
             (name.startsWith("mysql:")&&dbType==DbType.mysql);
+    }
+
+    private void fixSqlCompatibility(QueryToolConfiguration queryToolConfiguration) {
+        if(!queryToolConfiguration.isSqlCompatibilityFix()) return;
+        queryToolConfiguration.getQueries().values().forEach(query -> {
+            if (dbType == DbType.h2) {
+                query.setSql(SqlUtils.replaceFunctionCalls(
+                    query.getSql(), "md5","rawtohex(hash", "'MD5', ", ")"));
+            } if (dbType == DbType.mysql) {
+                query.setSql(query.getSql().replace("random()", "rand()"));
+            }
+        });
     }
 }

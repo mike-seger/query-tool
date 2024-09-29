@@ -1,5 +1,4 @@
 databaseChangeLog:
-
 - changeSet:
     id: 1726349917593-1
     author: lib

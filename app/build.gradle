@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'com.h2database:h2'
     implementation 'org.postgresql:postgresql:42.7.4'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.4.1'
 
     // Testing libraries
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -11,3 +11,13 @@ services:
       - POSTGRES_PASSWORD=S3cret
       - POSTGRES_USER=querytool
       - POSTGRES_DB=querytool
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-querytool-db
+    environment:
+      MYSQL_DATABASE: querytool
+      MYSQL_ROOT_PASSWORD: S3cret
+      MYSQL_USER: querytool
+      MYSQL_PASSWORD: S3cret
+    ports:
+      - "23306:3306"

@@ -14,6 +14,7 @@ import java.util.Map;
 public class QueryToolConfiguration {
     private Map<String, Query> queries = new LinkedHashMap<>();
     private boolean customQueries = false;
+    private boolean sqlCompatibilityFix = true;
     private Duration minTTL = Duration.ofSeconds(10);
     private Duration maxTTL = Duration.ofMinutes(60);
 }

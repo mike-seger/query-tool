@@ -31,3 +31,10 @@ This example application provides the following features:
 1. Clone the repository.
 2. Run `./gradlew bootRun`.
 3. Open a browser and navigate to `http://localhost:8080/`.
+
+## Docker
+TBD  
+```
+docker inspect -f '{{ .Mounts }}' mariadb-querytool-db
+docker rmi mariadb 
+```
