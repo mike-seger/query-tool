@@ -829,7 +829,6 @@ databaseChangeLog:
         - column:
             defaultValue: G
             name: rating
-            #type: MPAA_RATING
             type: VARCHAR(10)
         - column:
             constraints:
@@ -839,7 +838,6 @@ databaseChangeLog:
             type: TIMESTAMP
         - column:
             name: special_features
-#            type: TEXT[]
             type: VARCHAR(128)
         - column:
             constraints:
