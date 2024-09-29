@@ -568,7 +568,6 @@ databaseChangeLog:
 - changeSet:
     id: 1726349197863-24
     author: lib
-    dbms: "!mysql"
     changes:
     - createTable:
         columns:
@@ -623,10 +622,29 @@ databaseChangeLog:
             defaultValueComputed: now()
             name: last_update
             type: TIMESTAMP
+        tableName: staff
+- changeSet:
+    id: 1726349197863-24-a
+    author: lib
+    dbms: "h2,postgresql"
+    changes:
+    - addColumn:
+        tableName: staff
+        columns:
         - column:
             name: picture
             type: BYTEA
+- changeSet:
+    id: 1726349197863-24-b
+    author: lib
+    dbms: "mariadb"
+    changes:
+    - addColumn:
         tableName: staff
+        columns:
+        - column:
+            name: picture
+            type: BLOB
 - changeSet:
     id: 1726349197863-25
     author: lib

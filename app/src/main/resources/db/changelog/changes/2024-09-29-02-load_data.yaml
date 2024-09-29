@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+    id: 17276228275594-1
+    author: lib
+    changes:
+    - loadData:
+        relativeToChangelogFile: true
+        file: ../data/country-population.csv
+        separator: ','
+        quotchar: '"'
+        tableName: country_population

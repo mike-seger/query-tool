@@ -27,6 +27,7 @@ public class QueryService {
         this.queryToolConfiguration = queryToolConfiguration;
         this.dataSource = dataSource;
         this.dbType = DbType.fromString(getDatabaseType().toLowerCase());
+        this.queryToolConfiguration.setDbType(dbType);
         this.currentSchema = getCurrentSchema();
         this.asyncCacheManager = new AsyncCacheManager<>();
 
@@ -59,7 +60,7 @@ public class QueryService {
         var queries = new LinkedHashMap<>(queryToolConfiguration.getQueries());
         var predefinedQueries = new LinkedHashMap<String, Query>();
         queries.forEach((name, value) -> {
-            if (name.matches("^[a-z0-9]+:.*")) {
+            if (name.matches("^!?[a-z0-9]+:.*")) {
                 if (isDbSpecificQuery(name)) predefinedQueries.put("• "+name, queries.get(name));
             } else predefinedQueries.put("• "+name, queries.get(name));
         });
@@ -159,10 +160,13 @@ public class QueryService {
     }
 
     private boolean isDbSpecificQuery(String name) {
-        return (name.startsWith("h2:")&&dbType==DbType.h2) ||
+        var negate = name.startsWith("!");
+        name = negate?name.substring(1):name;
+        var result = (name.startsWith("h2:")&&dbType==DbType.h2) ||
             (name.startsWith("postgres:")&&dbType==DbType.postgres) ||
             (name.startsWith("oracle:")&&dbType==DbType.oracle) ||
             (name.startsWith("mysql:")&&dbType==DbType.mysql);
+        return negate != result;
     }
 
     private void fixSqlCompatibility(QueryToolConfiguration queryToolConfiguration) {

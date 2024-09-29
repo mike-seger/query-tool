@@ -1,0 +1,63 @@
+databaseChangeLog:
+- changeSet:
+    id: 17276228275494-1
+    author: michael (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: country_populationPK
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: area_sq_km
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: country
+            type: VARCHAR(255)
+        - column:
+            name: fert_rate
+            type: DOUBLE PRECISION
+        - column:
+            name: med_age
+            type: INT
+        - column:
+            name: migrants
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: net_change
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: pop_per_sq_km
+            type: INT
+        - column:
+            name: pop_urban_perc
+            type: DOUBLE PRECISION
+        - column:
+            constraints:
+              nullable: false
+            name: population
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: world_perc
+            type: DOUBLE PRECISION
+        - column:
+            constraints:
+              nullable: false
+            name: year_change_perc
+            type: DOUBLE PRECISION
+        tableName: country_population
