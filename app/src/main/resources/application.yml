@@ -30,7 +30,8 @@ com.net128.query-tool:
         from rental
         group by inventory_id
     random-fields: >
-      substring(cast(current_timestamp as char(26)), 1, 19) as "timestamp",
+      --
+          substring(cast(current_timestamp as char(26)), 1, 19) as "timestamp",
           round(random() * 1000) as "field1",
           round(random() * 1000) as "field2",
           round(random() * 1000) as "field3",
@@ -39,6 +40,7 @@ com.net128.query-tool:
           substring(md5(concat('1', random())), 1, 8) as "field6", 
           substring(md5(concat('2', random())), 1, 16) as "field7",
           substring(md5(concat('3', random())), 1, 20) as "field8"
+          --
   queries:
     "[postgres:table row counts]":
       sql: |
@@ -103,9 +105,8 @@ com.net128.query-tool:
       sql: |
         with num_fields as (
           select
-            row_number() over () as "id",
-            ${com.net128.query-tool.subquery.random-fields}
-          from generate_series(1, 10)
+            row_number() over () as "id", 
+            ${com.net128.query-tool.subquery.random-fields} from generate_series(1, 10)
         )
         select * from num_fields
     "[mysql:random data (auto refresh 1s)]":
@@ -114,13 +115,10 @@ com.net128.query-tool:
       sql: |
         with recursive num_fields as (
           select
-            1 as id,
-            ${com.net128.query-tool.subquery.random-fields}
-          union all
+            1 as id, ${com.net128.query-tool.subquery.random-fields}  union all
           select
-            id + 1,
-            ${com.net128.query-tool.subquery.random-fields}
-          from num_fields
+            id + 1, 
+            ${com.net128.query-tool.subquery.random-fields} from num_fields
           where id < 10
         )
         select * from num_fields
