@@ -74,7 +74,7 @@ com.net128.query-tool:
         join pg_stat_activity on pg_locks.pid = pg_stat_activity.pid
         order by backend_start desc
     "[current time]":
-      minTTL: 10s
+      minTTL: 5s
       maxTTL: 60m
       sql: |
         select current_timestamp
