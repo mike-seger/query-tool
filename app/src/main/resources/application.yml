@@ -102,7 +102,7 @@ com.net128.query-tool:
         )
         select * from num_fields
         
-    "[mysql__random data (auto refresh)]":
+    "[mysql:random data (auto refresh)]":
       minTTL: 1s
       maxTTL: 10m
       sql: |
