@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Application" type="Application" factoryName="Application" nameIsGenerated="true">
     <envs>
-      <env name="SPRING_PROFILES_ACTIVE" value="limited,h2" />
+      <env name="SPRING_PROFILES_ACTIVE" value="limited,pg" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="com.net128.oss.querytool.Application" />
     <module name="query-tool.app.main" />
