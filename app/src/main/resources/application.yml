@@ -44,9 +44,10 @@ com.net128.query-tool:
   queries:
     "[postgres:table row counts]":
       sql: |
+        analyze;
         select relname as table_name, n_live_tup as row_count
         from pg_stat_user_tables where schemaname=(select current_schema)
-        order by row_count desc, table_name
+        order by row_count desc, table_name;
     "[h2:table row counts]":
       sql: |
         select table_name, row_count_estimate row_count

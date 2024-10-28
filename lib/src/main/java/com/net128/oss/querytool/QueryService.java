@@ -2,6 +2,7 @@ package com.net128.oss.querytool;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -81,12 +82,27 @@ public class QueryService {
         return s.replace("\t", "\\t").replace("\n", "\\n");
     }
 
+    public SqlRowSet executeSqlScriptAndGetLastResult(String sqlScript) {
+        String[] statements = sqlScript.split("(?<!;)\\s*;\\s*(?=(?:[^']*'[^']*')*[^']*$)");
+        SqlRowSet resultSet = null;
+        for (int i = 0; i < statements.length; i++) {
+            String statement = statements[i].trim();
+            if (statement.isEmpty()) continue;
+
+            if (i < statements.length - 1) {
+                jdbcTemplate.execute(statement);
+            } else {
+                resultSet = jdbcTemplate.queryForRowSet(statement);
+            }
+        }
+        return resultSet;
+    }
+
     private String executeQueryPrivate(String sql) throws SQLException {
         var columnNames = new ArrayList<String>();
         var rows = new ArrayList<String>();
-
         try {
-            var rowSet = jdbcTemplate.queryForRowSet(sql);
+            var rowSet = executeSqlScriptAndGetLastResult(sql);
             for (var i = 1; i <= rowSet.getMetaData().getColumnCount(); i++) {
                 columnNames.add(escapeChars(rowSet.getMetaData().getColumnName(i)));
             }
